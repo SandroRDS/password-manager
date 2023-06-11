@@ -6,3 +6,5 @@ export type PasswordInfos = {
 };
 
 export type PasswordInfosWithID = PasswordInfos & { id: string };
+
+export type Themes = 'light' | 'dark';
