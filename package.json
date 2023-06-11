@@ -39,7 +39,7 @@
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/utils /*.ts"
+      "src/utils/*.ts"
     ],
     "coverageReporters": [
       "lcov",
