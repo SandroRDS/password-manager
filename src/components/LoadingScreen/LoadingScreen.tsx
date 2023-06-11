@@ -1,8 +1,8 @@
 import './LoadingScreen.scss';
 
-function LoadingScreen() {
+function LoadingScreen({ loadingFinish }: { loadingFinish: boolean }) {
   return (
-    <main className='loading-screen'>
+    <main className={`loading-screen ${loadingFinish ? 'loading-screen--finish' : ''}`}>
       <div className="wrapper">
         <div className="circle"></div>
         <div className="circle"></div>

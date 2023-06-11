@@ -101,3 +101,16 @@
   }
 }
 
+.loading-screen--finish {
+  animation-name: loading-finish;
+  animation-duration: 2000ms;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes loading-finish {
+  from {
+    opacity: 100%;
+  } to {
+    opacity: 0%;
+  }
+}
