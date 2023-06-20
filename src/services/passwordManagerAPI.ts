@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { setData, getData } from "../database/manageDatabase";
+import { databaseExists, setData, getData } from "../database/manageDatabase";
 import { ThemesType } from "../types/ThemesType";
 import { UserType } from "../types/UserType";
 import { UserConfigType } from "../types/UserConfigType";
@@ -84,6 +84,7 @@ async function logoff() {
 }
 
 export {
+  databaseExists,
   createUserConfig,
   setTheme,
   getTheme,
