@@ -1,27 +1,21 @@
 import store from 'storejs';
-import defaultConfig from './defaultConfig';
-const DATABASE_ESSENTIAL_KEYS = ['username'];
-const DATABASE_LIMIT_SPACE = 5 * 1024 ** 2; // Suporta até 5MB de dados armazenados
+import { UserConfigType } from '../types/UserConfigType';
+const DATABASE_ESSENTIAL_KEYS = ['user'];
 
 function databaseExists() {
   return DATABASE_ESSENTIAL_KEYS.every(KEY => store.get(`?${KEY}`));
 }
 
-async function loadDatabase() {
-  if (databaseExists()) return;
-
-  localStorage.clear();
-  store.set(defaultConfig);
-}
-
-async function getData(dataKey: string) {
+async function getData(dataKey: keyof UserConfigType) {
   return store.get(dataKey);
 }
 
-async function setData(dataKey: string, dataValue: any) {
-  const availableSpace = DATABASE_LIMIT_SPACE - JSON.stringify(localStorage).length;
-  if (availableSpace <= 0) throw new Error('Seu espaço de armazenamento permitido pelo navegador chegou ao limite.\nDelete algumas senhas para liberar espaço.');
-  store.set(dataKey, dataValue);
+async function setData(dataKey: keyof UserConfigType, dataValue: any) {
+  try {
+    store.set(dataKey, dataValue);
+  } catch {
+    throw new Error('Seu espaço de armazenamento permitido pelo navegador chegou ao limite.\nDelete algumas senhas para liberar espaço.');
+  }
 }
 
-export { loadDatabase, getData, setData };
+export { databaseExists, getData, setData, DATABASE_ESSENTIAL_KEYS };
