@@ -13,8 +13,7 @@
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sass": "^1.63.3",
-    "storejs": "^2.0.5",
+    "react-router-dom": "^6.13.0",
     "sweetalert2": "^11.7.12"
   },
   "devDependencies": {
