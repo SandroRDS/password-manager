@@ -1,17 +1,17 @@
-import TargetStorageAdapter from "../../adapters/storage/TargetStorageAdapter";
+import IStorageAdapter from "../../adapters/storage/IStorageAdapter";
 
 export default class StorageService {
-  constructor(private adapteeStorageAdapter: TargetStorageAdapter) {}
+  constructor(private storageAdapter: IStorageAdapter) {}
 
-  async saveItem<ItemStorage>(key: string, value: ItemStorage): Promise<void> {
-    return await this.adapteeStorageAdapter.saveItem<ItemStorage>(key, value);
+  saveItem<ItemStorage>(key: string, value: ItemStorage): void {
+    return this.storageAdapter.saveItem<ItemStorage>(key, value);
   }
 
-  async getItem<ItemStorage>(key: string): Promise<ItemStorage | null> {
-    return await this.adapteeStorageAdapter.getItem<ItemStorage>(key);
+  getItem<ItemStorage>(key: string): ItemStorage | null {
+    return this.storageAdapter.getItem<ItemStorage>(key);
   }
 
-  async deleteItem(key: string): Promise<void> {
-    this.adapteeStorageAdapter.deleteItem(key);
+  deleteItem(key: string): void {
+    return this.storageAdapter.deleteItem(key);
   }
 }
