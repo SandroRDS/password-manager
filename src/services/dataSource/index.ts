@@ -1,9 +1,6 @@
-import { nanoid } from "nanoid";
-import { databaseExists, setData, getData } from "../database/manageDatabase";
-import { ThemesType } from "../types/ThemesType";
-import { UserType } from "../types/UserType";
-import { UserConfigType } from "../types/UserConfigType";
-import { AccountType, AccountTypeWithID } from "../types/AccountType";
+class DataSource {
+
+}
 
 async function createUserConfig(userConfig: UserConfigType) {
   Object.entries(userConfig)
