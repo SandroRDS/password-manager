@@ -1,7 +1,7 @@
 import { vi, Mock } from 'vitest';
 import StorageAdapter from '../../src/adapters/storage/StorageAdapter';
 
-describe('1 - Testando correto comportamento da Classe StorageAdapter', () => {
+describe('1 - Testando correto comportamento da classe StorageAdapter', () => {
   const storageAdapter = new StorageAdapter();
 
   window.localStorage = {
@@ -63,7 +63,7 @@ describe('1 - Testando correto comportamento da Classe StorageAdapter', () => {
       (localStorage.getItem as Mock).mockClear();
     }
 
-    const objStorage = { 
+    const storageDataMock = { 
       item1: JSON.stringify(2),
       item2: JSON.stringify('foo'),
       item3: JSON.stringify(true),
@@ -71,7 +71,7 @@ describe('1 - Testando correto comportamento da Classe StorageAdapter', () => {
       item5: JSON.stringify({ name: 'foo', age: 42 }),
     };
 
-    (localStorage.getItem as Mock).mockImplementation((key) => objStorage[key]);
+    (localStorage.getItem as Mock).mockImplementation((key) => storageDataMock[key]);
 
     verifyStorageCalls<number>('item1', 2);
     verifyStorageCalls<string>('item2', 'foo');
