@@ -1,7 +1,8 @@
+import IStorageAdapter from '../../adapters/storage/IStorageAdapter';
 import StorageService from '../storage';
 
 export default class SessionService {
-  private storageService = new StorageService;
+  constructor(private storageService: IStorageAdapter = new StorageService()){};
 
   isLogged(): boolean {
     return this.storageService.getItem<boolean>('logged') as boolean;  
