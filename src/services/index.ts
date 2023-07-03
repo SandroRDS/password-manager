@@ -3,8 +3,7 @@ import PageModulatorService from './pageModulator';
 
 const services = {
   pageModulator: new PageModulatorService(),
-  session: new SessionService(),
-  
+  session: new SessionService(), 
 }
 
 export default services;

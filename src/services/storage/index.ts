@@ -1,6 +1,5 @@
 import IStorageAdapter from '../../adapters/storage/IStorageAdapter';
 import StorageAdapter from '../../adapters/storage/StorageAdapter';
-import StorageKeys from '../../types/StorageKeys';
 
 export default class StorageService {
   constructor(private storageAdapter: IStorageAdapter = new StorageAdapter) {}
@@ -10,7 +9,7 @@ export default class StorageService {
   }
 
   getItem<ItemStorage>(key: string): ItemStorage | null {
-    return this.storageAdapter.getItem<ItemStorage>(key as StorageKeys);
+    return this.storageAdapter.getItem<ItemStorage>(key);
   }
 
   deleteItem(key: string): void {

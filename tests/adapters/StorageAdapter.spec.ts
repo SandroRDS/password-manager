@@ -3,6 +3,22 @@ import StorageAdapter from '../../src/adapters/storage/StorageAdapter';
 
 describe('1 - Testando correto comportamento da classe StorageAdapter', () => {
   const storageAdapter = new StorageAdapter();
+  const storageDataMock = { 
+    theme: 'dark',
+    user: {
+      username: 'Jhon',
+      profileImage: 'profileImage1.jpg',
+      pin: '231344235',
+    },
+    siteAccountsList: [
+      {
+        siteName: 'YouTube',
+        siteUrl: 'https://www.youtube.com',
+        accountLogin: 'jhon@gmail.com',
+        accountPassword: 'password121',
+      }
+    ],
+  };
 
   window.localStorage = {
     ...window.localStorage,
@@ -21,13 +37,9 @@ describe('1 - Testando correto comportamento da classe StorageAdapter', () => {
       (localStorage.setItem as Mock).mockClear();
     }
 
-    verifyStorageCalls<number>('item1', 42);
-    verifyStorageCalls<string>('item2', 'random value');
-    verifyStorageCalls<boolean>('item3', true);
-    verifyStorageCalls<number[]>('item4', [1, 2, 3]);
-    verifyStorageCalls<{ name: string, age: number }>('item5', { 
-      name: 'Jhon', age: 23 
-    });
+    Object.entries(storageDataMock).forEach(([key, value]) => {
+      verifyStorageCalls<typeof value>(key, value);
+    })
   });
 
   test('1.2 - Método saveItem retorna um erro personalizado caso o localStorage lance um erro de QuotaExceeded.', () => {
@@ -37,21 +49,25 @@ describe('1 - Testando correto comportamento da classe StorageAdapter', () => {
       throw quotaError;
     });
 
-    expect(() => storageAdapter.saveItem<string>('item1', 'foo')).toThrow('Cota de armazenamento do navegador excedida.');
-    expect(() => storageAdapter.saveItem<string>('item1', 'foo')).not.toThrow('Erro');
+    expect(() => storageAdapter.saveItem<string>('theme', storageDataMock.theme)).toThrow('Cota de armazenamento do navegador excedida.');
   });
 
-  test('1.3 - Método saveItem re-lança o erro recebido caso o localStorage envie algum outro tipo de erro.', () => {
+  test('1.3 - Método saveItem retorna um erro caso a chave recebida não esteja configurada em STORAGE_KEYS.', () => {
+    expect(() => storageAdapter.saveItem<string>('item1', 'foo')).toThrow('Chave não configurada.');
+    expect(() => storageAdapter.saveItem<string>('theme', storageDataMock.theme)).not.toThrow('Chave não configurada.');
+  });
+
+  test('1.4 - Método saveItem re-lança o erro recebido caso o localStorage envie algum outro tipo de erro.', () => {
     (localStorage.setItem as Mock).mockImplementation(() => {
       const randomError = new Error('Random Error');
       throw randomError;
     });
 
-    expect(() => storageAdapter.saveItem('item1', 'foo')).toThrow('Random Error');
-    expect(() => storageAdapter.saveItem('item1', 'foo')).not.toThrow('Cota de armazenamento do navegador excedida.');
+    expect(() => storageAdapter.saveItem('theme', storageDataMock.theme)).toThrow('Random Error');
+    expect(() => storageAdapter.saveItem('theme', storageDataMock.theme)).not.toThrow('Cota de armazenamento do navegador excedida.');
   });
   
-  test('1.4 - Método getItem faz uma chamada corretamente ao getItem do localStorage e retorna o dado extraído desconvertido do formato JSON.', () => {
+  test('1.5 - Método getItem faz uma chamada corretamente ao getItem do localStorage e retorna o dado extraído desconvertido do formato JSON.', () => {
     const verifyStorageCalls = <ItemStorage>(key: string, valueExpected: ItemStorage) => {
       const result = storageAdapter.getItem<ItemStorage>(key);
       expect(localStorage.getItem).toBeCalledTimes(1);
@@ -63,28 +79,22 @@ describe('1 - Testando correto comportamento da classe StorageAdapter', () => {
       (localStorage.getItem as Mock).mockClear();
     }
 
-    const storageDataMock = { 
-      item1: JSON.stringify(2),
-      item2: JSON.stringify('foo'),
-      item3: JSON.stringify(true),
-      item4: JSON.stringify([1, 2, 3]),
-      item5: JSON.stringify({ name: 'foo', age: 42 }),
-    };
+    (localStorage.getItem as Mock).mockImplementation((key) => JSON.stringify(storageDataMock[key]));
 
-    (localStorage.getItem as Mock).mockImplementation((key) => storageDataMock[key]);
-
-    verifyStorageCalls<number>('item1', 2);
-    verifyStorageCalls<string>('item2', 'foo');
-    verifyStorageCalls<boolean>('item3', true);
-    verifyStorageCalls<number[]>('item4', [1, 2, 3]);
-    verifyStorageCalls<{ name: string, age: number }>('item5', {
-      name: 'foo',
-      age: 42,
-    });
-    expect(storageAdapter.getItem<string>('item6')).toBeNull();
+    Object.entries(storageDataMock).forEach(([key, value]) => {
+      verifyStorageCalls<typeof value>(key, value);
+    })
   });
 
-  test('1.5 - Método deleteItem faz uma chamada corretamente ao removeItem do localStorage.', () => {
+  test('1.6 - Método getItem retorna null caso o localStorage retorne null (não reconheça que a chave está declarada).', () => {
+    expect(storageAdapter.getItem<string>('theme')).toBeNull();
+  });
+
+  test('1.7 - Método getItem retorna um erro caso a chave recebida não esteja configurada em STORAGE_KEYS.', () => {
+    expect(() => storageAdapter.getItem('item1')).toThrow('Chave não configurada.');
+  });
+
+  test('1.8 - Método deleteItem faz uma chamada corretamente ao removeItem do localStorage.', () => {
     storageAdapter.deleteItem('item1');
     expect(localStorage.removeItem).toBeCalledTimes(1);
     expect(localStorage.removeItem).toBeCalledWith('item1');
