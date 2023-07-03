@@ -1,4 +1,5 @@
 import IStorageAdapter from '../../adapters/storage/IStorageAdapter';
+import config from '../../config';
 import StorageService from '../storage';
 
 export default class SystemConfigService {
@@ -9,6 +10,7 @@ export default class SystemConfigService {
   }
 
   setTheme(theme: string): void {
+    if (!config.constants.THEMES.includes(theme)) throw new ReferenceError('Tema inexistente.');
     this.storageService.saveItem<string>('theme', theme);
   }
 }

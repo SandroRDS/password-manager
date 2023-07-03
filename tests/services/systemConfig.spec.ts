@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import SystemConfigService from '../../src/services/systemConfig';
 import storageMock from '../mocks/StorageMock';
+import config from '../../src/config';
 
 describe('1 - Testando correto funcionamento da classe SystemConfigService', () => {
   const systemConfigService = new SystemConfigService(storageMock);
@@ -18,7 +19,16 @@ describe('1 - Testando correto funcionamento da classe SystemConfigService', () 
     expect(result2).toBe('white');
   });
 
-  test('1.2 - O método setTheme modifica o valor da chave ', () => {
-    
+  test('1.2 - O método setTheme modifica o valor da chave "theme", alterando o tema atual da plataforma.', () => {
+    config.constants.THEMES.forEach(theme => {
+      systemConfigService.setTheme(theme);
+      expect(storageMock.saveItem).toBeCalledTimes(1);
+      expect(storageMock.saveItem).toBeCalledWith('theme', theme);
+      storageMock.saveItem.mockClear();
+    })
+  });
+
+  test('1.3 - O método setTheme retorna um erro caso o tema informado não esteja configurado na constante THEMES.', () => {
+    expect(() => systemConfigService.setTheme('unknown theme')).toThrow('Tema inexistente.');
   });
 });
