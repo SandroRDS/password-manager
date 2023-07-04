@@ -3,7 +3,7 @@ import config from '../../config';
 import StorageService from '../storage';
 
 export default class SystemConfigService {
-  constructor(private storageService: IStorageAdapter = new StorageService){};
+  constructor(private storageService: IStorageAdapter = new StorageService()){};
   
   getTheme(): string {
     return this.storageService.getItem<string>('theme') as string;
